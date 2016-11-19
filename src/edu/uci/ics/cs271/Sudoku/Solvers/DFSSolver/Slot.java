@@ -1,4 +1,4 @@
-package edu.uci.ics.cs271.SudokuSolver;
+package edu.uci.ics.cs271.Sudoku.Solvers.DFSSolver;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -111,6 +111,10 @@ public class Slot implements Comparable<Slot>
 		{
 			this.x = x;
 			this.y = y;
+		}
+		public String toString()
+		{
+			return "x:" + this.x + " y:" + this.y;
 		}
 	}
 	public List<Integer> getPosVals()
