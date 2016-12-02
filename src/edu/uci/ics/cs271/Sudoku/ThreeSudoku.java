@@ -38,7 +38,7 @@ public class ThreeSudoku
                     puzzle[rowVal][i] = value;
                 }
             }
-            if (rowVal == 1)
+            else if (rowVal == 1)
             {
                 if (value == 0)
                 {
@@ -49,7 +49,7 @@ public class ThreeSudoku
                     puzzle[rowVal][i-9] = value;
                 }
             }
-            if (rowVal == 2)
+            else if (rowVal == 2)
             {
                 if (value == 0)
                 {
@@ -60,7 +60,7 @@ public class ThreeSudoku
                     puzzle[rowVal][i-18] = value;
                 }
             }
-            if (rowVal == 3)
+            else if (rowVal == 3)
             {
                 if (value == 0)
                 {
@@ -71,7 +71,7 @@ public class ThreeSudoku
                     puzzle[rowVal][i-27] = value;
                 }
             }
-            if (rowVal == 4)
+            else if (rowVal == 4)
             {
                 if (value == 0)
                 {
@@ -82,7 +82,7 @@ public class ThreeSudoku
                     puzzle[rowVal][i-36] = value;
                 }
             }
-            if (rowVal == 5)
+            else if (rowVal == 5)
             {
                 if (value == 0)
                 {
@@ -93,7 +93,7 @@ public class ThreeSudoku
                     puzzle[rowVal][i-45] = value;
                 }
             }
-            if (rowVal == 6)
+            else if (rowVal == 6)
             {
                 if (value == 0)
                 {
@@ -104,7 +104,7 @@ public class ThreeSudoku
                     puzzle[rowVal][i-54] = value;
                 }
             }
-            if (rowVal == 7)
+            else if (rowVal == 7)
             {
                 if (value == 0)
                 {
@@ -115,7 +115,7 @@ public class ThreeSudoku
                     puzzle[rowVal][i-63] = value;
                 }
             }
-            if (rowVal == 8)
+            else if (rowVal == 8)
             {
                 if (value == 0)
                 {
