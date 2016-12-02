@@ -1,13 +1,20 @@
-package edu.uci.ics.cs271.Sudoku.Solvers.ConstraintSolver;
+package edu.uci.ics.cs271.Sudoku.Solvers.BTSConstraintMRV;
 
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 
 public class Slot implements Comparable<Slot>
 {
+	private static final SlotDomainComparator comp;
 	private Coordinate cor;
 	private Integer value;
 	private Integer size;
+
+	static
+	{
+		comp = new SlotDomainComparator();
+	}
 
 	private Set<Integer> domain;
 
@@ -40,9 +47,9 @@ public class Slot implements Comparable<Slot>
 	 * return posVals; }
 	 */
 
-	public int compareTo(Slot arg0)
+	public int compareTo(Slot that)
 	{
-		return this.domain.size() - arg0.getDomain().size();
+		return this.cor.x * this.cor.x + this.cor.y * this.cor.y;
 	}
 
 	public String toString()
@@ -68,7 +75,7 @@ public class Slot implements Comparable<Slot>
 		return this.domain;
 	}
 
-	private class Coordinate
+	public class Coordinate
 	{
 		public int x;
 		public int y;
@@ -78,11 +85,26 @@ public class Slot implements Comparable<Slot>
 			this.x = x;
 			this.y = y;
 		}
+
+		public boolean equals(Coordinate that)
+		{
+			return this.x == that.x && this.y == that.y;
+		}
 	}
+
+	private static class SlotDomainComparator implements Comparator<Slot>
+	{
+		public int compare(Slot a, Slot b)
+		{
+			return a.domain.size() - b.domain.size();
+		}
+	}
+
 	public int getXCoordinate()
 	{
 		return this.cor.x;
 	}
+
 	public int getYCoordinate()
 	{
 		return this.cor.y;
@@ -96,5 +118,9 @@ public class Slot implements Comparable<Slot>
 	public void addToDomain(Integer i)
 	{
 		this.domain.add(i);
+	}
+	public static Comparator<Slot> getComparator()
+	{
+		return Slot.comp;
 	}
 }

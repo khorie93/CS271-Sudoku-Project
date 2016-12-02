@@ -1,20 +1,19 @@
-package edu.uci.ics.cs271.Sudoku.Solvers.ConstraintSolver;
+package edu.uci.ics.cs271.Sudoku.Solvers.BTSConstraintMRV;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
 import edu.uci.ics.cs271.Sudoku.Sudoku;
 import edu.uci.ics.cs271.Sudoku.DataStructures.Heap;
+import edu.uci.ics.cs271.Sudoku.DataStructures.MinArrayHeap;
 import edu.uci.ics.cs271.Sudoku.DataStructures.PriorityQHeap;
-import edu.uci.ics.cs271.Sudoku.DataStructures.PriorityQHeap2;
 import edu.uci.ics.cs271.Sudoku.Solvers.SudokuSolver;
 import edu.uci.ics.cs271.Sudoku.Solvers.SudokuSolver.InconsistentSudokuException;
 
-public class ConstraintSolver extends SudokuSolver
+public class BTSConstraintMRV extends SudokuSolver
 {
 	Slot puzzleGrid[][];
 
@@ -22,15 +21,13 @@ public class ConstraintSolver extends SudokuSolver
 	List<Slot> cols[];
 	List<Slot> boxs[][];
 
-	private int backtracks;
-
-	public ConstraintSolver(int[][] board)
+	public BTSConstraintMRV(int[][] board)
 	{
 		super(board);
 		this.initialize();
 	}
 
-	public ConstraintSolver(Sudoku s)
+	public BTSConstraintMRV(Sudoku s)
 	{
 		super(s);
 		this.initialize();
@@ -73,7 +70,10 @@ public class ConstraintSolver extends SudokuSolver
 	public Sudoku solve() throws InconsistentSudokuException
 	{
 		this.backtracks = 0;
-		Heap<Slot> q = new PriorityQHeap<>();
+		Heap<Slot> q = new MinArrayHeap<>(this.size * this.size, Slot.getComparator());
+		//Heap<Slot> q = new PriorityQHeap<>(Slot.getComparator());
+		
+		//TreeMap<Slot, Slot> map = new TreeMap<>();
 
 		int size = this.init.getSize();
 
@@ -84,9 +84,8 @@ public class ConstraintSolver extends SudokuSolver
 
 		if (!this.solve(q))
 			throw new InconsistentSudokuException();
+
 		solved = true;
-		
-		System.out.println("Backtracks: " + this.backtracks);
 
 		return this.getSolved();
 	}
@@ -114,20 +113,20 @@ public class ConstraintSolver extends SudokuSolver
 			for (Slot j : this.rows[cur.getXCoordinate()])
 				if (j.removeFromDomain(i))
 				{
+					q.decreaseUpdate(j);
 					undo.add(j);
-					q.update(j);
 				}
 			for (Slot j : this.cols[cur.getYCoordinate()])
 				if (j.removeFromDomain(i))
 				{
+					q.decreaseUpdate(j);
 					undo.add(j);
-					q.update(j);
 				}
 			for (Slot j : this.boxs[boxX][boxY])
 				if (j.removeFromDomain(i))
 				{
+					q.decreaseUpdate(j);
 					undo.add(j);
-					q.update(j);
 				}
 
 			/*
@@ -155,7 +154,10 @@ public class ConstraintSolver extends SudokuSolver
 
 			// If we get here than the value did not work. Add it back!
 			for (Slot s : undo)
+			{
 				s.addToDomain(i);
+				q.increaseUpdate(s);
+			}
 
 			cur.setValue(null);
 		}

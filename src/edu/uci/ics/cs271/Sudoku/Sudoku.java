@@ -5,7 +5,7 @@ public class Sudoku
 	private int size;
 	private int base;
 
-	private int board[][];
+	public int board[][];
 
 	public Sudoku(int board[][])
 	{
@@ -17,6 +17,13 @@ public class Sudoku
 		for (int i = 0; i < this.size; i++)
 			for (int j = 0; j < this.size; j++)
 				this.board[i][j] = board[i][j];
+	}
+	public Sudoku(int base)
+	{
+		this.base = base;
+		this.size = base * base;
+		
+		this.board = new int[this.size][this.size];
 	}
 	public Sudoku clone()
 	{

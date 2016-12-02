@@ -1,4 +1,4 @@
-package edu.uci.ics.cs271.Sudoku.Solvers.DFSSolver;
+package edu.uci.ics.cs271.Sudoku.Solvers.BTSConstraint;
 
 import java.util.Collections;
 import java.util.Deque;
@@ -10,20 +10,21 @@ import java.util.Set;
 import edu.uci.ics.cs271.Sudoku.Sudoku;
 import edu.uci.ics.cs271.Sudoku.Solvers.SudokuSolver;
 
-public class DFSSolver extends SudokuSolver
+public class BTSConstraint extends SudokuSolver
 {
 	Slot puzzleGrid[][];
 
 	Set<Integer> rows[];
 	Set<Integer> cols[];
 	Set<Integer> boxs[];
-
+	
 	@SuppressWarnings("unchecked")
-	public DFSSolver(Sudoku s)
+	public BTSConstraint(Sudoku s)
 	{
 		super(s);
 
 		int size = this.init.getSize();
+		this.backtracks = 0;
 
 		this.puzzleGrid = new Slot[size][size];
 
@@ -59,7 +60,7 @@ public class DFSSolver extends SudokuSolver
 				this.puzzleGrid[x][y].calcPosVals();
 	}
 
-	public DFSSolver(int board[][])
+	public BTSConstraint(int board[][])
 	{
 		super(board);
 	}
@@ -67,6 +68,7 @@ public class DFSSolver extends SudokuSolver
 	public Sudoku solve() throws InconsistentSudokuException
 	{
 		Deque<Slot> q = new LinkedList<Slot>();
+		this.backtracks =0;
 
 		int size = this.init.getSize();
 
@@ -78,7 +80,7 @@ public class DFSSolver extends SudokuSolver
 		if (!this.solve(q))
 			throw new InconsistentSudokuException();
 		solved = true;
-
+		
 		return getSolved();
 	}
 
@@ -100,7 +102,7 @@ public class DFSSolver extends SudokuSolver
 		}
 
 		q.push(cur);
-		// this.backtracks++;
+		this.backtracks++;
 		return false;
 	}
 

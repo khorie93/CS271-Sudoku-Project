@@ -7,6 +7,7 @@ public abstract class SudokuSolver
 {
 	protected int size;
 	protected int base;
+	protected int backtracks;
 	protected Sudoku init;
 	protected Sudoku isSolved;
 	protected boolean solved;
@@ -41,6 +42,13 @@ public abstract class SudokuSolver
 
 	public class InconsistentSudokuException extends Exception
 	{
-		private static final long serialVersionUID = 1L;
+	}
+
+	public int getBacktracks()
+	{
+		if(!isSolved())
+			return -1;
+
+		return this.backtracks;
 	}
 }
