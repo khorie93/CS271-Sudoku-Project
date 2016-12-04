@@ -18,6 +18,6 @@ public class InitialBoard
                 + "-down, with 0 for empty squares:");
         puzz.initialize(new FileInputStream("/Users/kanabee/Downloads/benchmarks/Sudoku/sudoku.txt"));
         System.out.println();
-        puzz.outputInitialize(System.out);
+        puzz.outputSolution(System.out);
     }   
 }

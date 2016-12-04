@@ -44,7 +44,7 @@ public class ThreeSudoku
         }
     }
     
-    public void outputInitialize(OutputStream out)
+    public void outputSolution(OutputStream out)
     {
         PrintStream output = new PrintStream(out);
         
