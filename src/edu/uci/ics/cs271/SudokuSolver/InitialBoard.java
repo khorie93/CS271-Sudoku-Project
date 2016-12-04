@@ -16,7 +16,7 @@ public class InitialBoard
         System.out.println("Enter sequence of 81 integers ranging [0,9], "
                 + "encoding the initial board position, left-to-right and top"
                 + "-down, with 0 for empty squares:");
-        puzz.initialize(new FileInputStream("/Users/kanabee/NetBeansProjects/Sudoku/build/classes/Input.txt"));
+        puzz.initialize(new FileInputStream("/Users/kanabee/Downloads/benchmarks/Sudoku/sudoku.txt"));
         System.out.println();
         puzz.outputInitialize(System.out);
     }   

@@ -3,128 +3,43 @@ package edu.uci.ics.cs271.Sudoku;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class ThreeSudoku 
 {
     Integer[][] puzzle = new Integer[9][9];
+    ArrayList<Integer[][]> myPuzzles = new ArrayList<Integer[][]>(8);
     
     public void initialize(InputStream in)
     {
-        int value, rowVal;
+        int row;
+        String line;
+        String[] lineArray;
+        row = 0;
         Scanner input = new Scanner(in);
-        
-        for (int i = 0; i < 81; i++)
+        while (input.hasNextLine())
         {
-            value = input.nextInt();
-            if (value < 0)
+            line = input.nextLine();
+            if (!line.equals(""))
             {
-                throw new InputMismatchException("Input value is less than 0.");
-            }
-            if (value > 9)
-            {
-                throw new InputMismatchException("Input value is greater than 9.");
-            }
-            rowVal = (int) Math.floor(i/9);
-            if (rowVal == 0)
-            {
-                if (value == 0)
+                if (line.contains(","))
                 {
-                    puzzle[rowVal][i] = null;
-                }
-                else
-                {
-                    puzzle[rowVal][i] = value;
+                    lineArray = line.split(",");
+                    for (int i = 0; i < 9; i++)
+                    {
+                        puzzle[row][i] = Integer.parseInt(lineArray[i]);
+                    }
+                    row = row + 1;
                 }
             }
-            else if (rowVal == 1)
+            if (row == 9)
             {
-                if (value == 0)
-                {
-                    puzzle[rowVal][i-9] = null;
-                }
-                else
-                {
-                    puzzle[rowVal][i-9] = value;
-                }
-            }
-            else if (rowVal == 2)
-            {
-                if (value == 0)
-                {
-                    puzzle[rowVal][i-18] = null;
-                }
-                else
-                {
-                    puzzle[rowVal][i-18] = value;
-                }
-            }
-            else if (rowVal == 3)
-            {
-                if (value == 0)
-                {
-                    puzzle[rowVal][i-27] = null;
-                }
-                else
-                {
-                    puzzle[rowVal][i-27] = value;
-                }
-            }
-            else if (rowVal == 4)
-            {
-                if (value == 0)
-                {
-                    puzzle[rowVal][i-36] = null;
-                }
-                else
-                {
-                    puzzle[rowVal][i-36] = value;
-                }
-            }
-            else if (rowVal == 5)
-            {
-                if (value == 0)
-                {
-                    puzzle[rowVal][i-45] = null;
-                }
-                else
-                {
-                    puzzle[rowVal][i-45] = value;
-                }
-            }
-            else if (rowVal == 6)
-            {
-                if (value == 0)
-                {
-                    puzzle[rowVal][i-54] = null;
-                }
-                else
-                {
-                    puzzle[rowVal][i-54] = value;
-                }
-            }
-            else if (rowVal == 7)
-            {
-                if (value == 0)
-                {
-                    puzzle[rowVal][i-63] = null;
-                }
-                else
-                {
-                    puzzle[rowVal][i-63] = value;
-                }
-            }
-            else if (rowVal == 8)
-            {
-                if (value == 0)
-                {
-                    puzzle[rowVal][i-72] = null;
-                }
-                else
-                {
-                    puzzle[rowVal][i-72] = value;
-                }
+                myPuzzles.add(puzzle);
+                row = 0;
+                puzzle = new Integer[9][9];
             }
         }
     }
@@ -133,11 +48,22 @@ public class ThreeSudoku
     {
         PrintStream output = new PrintStream(out);
         
-        for (int i = 0; i < 9; i++)
+        for (int i = 0; i <8; i++)
         {
-            for (int j = 0; j < 9; j++)
+            for (int row = 0; row < 9; row++)
             {
-                output.print(puzzle[i][j] + " ");
+                for (int j = 0; j < 9; j++)
+                {
+                    if (j == 8)
+                    {
+                        output.print(myPuzzles.get(i)[row][j]);
+                    }
+                    else
+                    {
+                        output.print(myPuzzles.get(i)[row][j] + ",");
+                    }
+                }
+                output.println();
             }
             output.println();
         }
