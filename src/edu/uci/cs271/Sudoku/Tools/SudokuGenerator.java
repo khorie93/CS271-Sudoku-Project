@@ -8,30 +8,23 @@ import java.util.Queue;
 
 import edu.uci.ics.cs271.Sudoku.Sudoku;
 import edu.uci.ics.cs271.Sudoku.Solvers.SudokuSolver;
-import edu.uci.ics.cs271.Sudoku.Solvers.BTSConstraint.BTSConstraint;
+import edu.uci.ics.cs271.Sudoku.Solvers.BTSConstraint.BTSConstraintMRV;
 import edu.uci.ics.cs271.Sudoku.Solvers.SudokuSolver.InconsistentSudokuException;
 
 public class SudokuGenerator
 {
-	private int base;
-	private int size;
-	
-	public SudokuGenerator(int base)
+	public static Sudoku genSudokuPuzzle(int base, double d) throws InconsistentSudokuException
 	{
-		this.base = base;
-		this.size = base * base;
-	}
-	public Sudoku genSudokuPuzzle(float difficulty) throws InconsistentSudokuException
-	{
-		Sudoku blank = new Sudoku(this.base);
-		SudokuSolver s = new BTSConstraint(blank);
+		int size = base * base;
+		Sudoku blank = new Sudoku(base);
+		SudokuSolver s = new BTSConstraintMRV(blank);
 		
 		Sudoku solved = s.solve();
 		
 		List<Coordinate> l = new ArrayList<>();
 		
-		for(int i = 0; i < this.size; i++)
-			for(int j = 0; j < this.size; j++)
+		for(int i = 0; i < size; i++)
+			for(int j = 0; j < size; j++)
 				l.add(new Coordinate(i,j));
 
 		Collections.shuffle(l);
@@ -40,7 +33,7 @@ public class SudokuGenerator
 		
 		int numberOfVars = size * size;
 		
-		for(int i = 0; i < numberOfVars - difficulty * numberOfVars; i++)
+		for(int i = 0; i < numberOfVars - d * numberOfVars; i++)
 		{
 			Coordinate cur = q.remove();
 			solved.board[cur.x][cur.y] = 0;
@@ -48,7 +41,7 @@ public class SudokuGenerator
 
 		return solved;
 	}
-	private class Coordinate
+	private static class Coordinate
 	{
 		int x;
 		int y;

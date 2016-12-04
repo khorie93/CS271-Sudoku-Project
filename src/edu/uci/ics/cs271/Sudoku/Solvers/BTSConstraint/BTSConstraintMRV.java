@@ -1,17 +1,17 @@
-package edu.uci.ics.cs271.Sudoku.Solvers.BTSConstraintMRV;
+package edu.uci.ics.cs271.Sudoku.Solvers.BTSConstraint;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.PriorityQueue;
-import java.util.Queue;
+import java.util.Set;
 
 import edu.uci.ics.cs271.Sudoku.Sudoku;
 import edu.uci.ics.cs271.Sudoku.DataStructures.Heap;
 import edu.uci.ics.cs271.Sudoku.DataStructures.MinArrayHeap;
 import edu.uci.ics.cs271.Sudoku.DataStructures.PriorityQHeap;
+import edu.uci.ics.cs271.Sudoku.Solvers.MaxSearchDepthExceeded;
 import edu.uci.ics.cs271.Sudoku.Solvers.SudokuSolver;
-import edu.uci.ics.cs271.Sudoku.Solvers.SudokuSolver.InconsistentSudokuException;
+import edu.uci.ics.cs271.Sudoku.Solvers.BTSConstraintMRV.Slot;
 
 public class BTSConstraintMRV extends SudokuSolver
 {
@@ -21,22 +21,26 @@ public class BTSConstraintMRV extends SudokuSolver
 	List<Slot> cols[];
 	List<Slot> boxs[][];
 
+	int[] valUsedCount;
+
 	public BTSConstraintMRV(int[][] board)
 	{
 		super(board);
-		this.initialize();
+		this.initialize(0, this.base);
 	}
 
 	public BTSConstraintMRV(Sudoku s)
 	{
 		super(s);
-		this.initialize();
+		this.initialize(0, this.base);
 	}
 
 	@SuppressWarnings("unchecked")
-	private void initialize()
+	protected void initialize(int backtracks, int max_backtracks)
 	{
-		this.backtracks = 0;
+		this.backtracks = backtracks;
+		this.max_backtracks = max_backtracks * this.base;
+
 		this.puzzleGrid = new Slot[size][size];
 
 		// this.rows = (HashSet<Integer>[]) new HashSet[this.size];
@@ -65,15 +69,41 @@ public class BTSConstraintMRV extends SudokuSolver
 			}
 		}
 
+		int initCur;
+		Slot cur = null;
+
+		this.valUsedCount = new int[this.size];
+
+		for (int x = 0; x < this.size; x++)
+			for (int y = 0; y < this.size; y++)
+			{
+				initCur = this.init.board[x][y];
+
+				if (initCur != 0)
+				{
+					cur = this.puzzleGrid[x][y];
+					cur.setValue(initCur);
+
+					int boxX = cur.getXCoordinate() / this.base;
+					int boxY = cur.getYCoordinate() / this.base;
+
+					for (Slot j : this.rows[cur.getXCoordinate()])
+						j.removeFromDomain(initCur);
+					for (Slot j : this.cols[cur.getYCoordinate()])
+						j.removeFromDomain(initCur);
+					for (Slot j : this.boxs[boxX][boxY])
+						j.removeFromDomain(initCur);
+					this.valUsedCount[initCur - 1]++;
+				}
+			}
 	}
 
 	public Sudoku solve() throws InconsistentSudokuException
 	{
-		this.backtracks = 0;
 		Heap<Slot> q = new MinArrayHeap<>(this.size * this.size, Slot.getComparator());
-		//Heap<Slot> q = new PriorityQHeap<>(Slot.getComparator());
-		
-		//TreeMap<Slot, Slot> map = new TreeMap<>();
+		// Heap<Slot> q = new PriorityQHeap<>(Slot.getComparator());
+
+		// TreeMap<Slot, Slot> map = new TreeMap<>();
 
 		int size = this.init.getSize();
 
@@ -82,23 +112,36 @@ public class BTSConstraintMRV extends SudokuSolver
 				if (this.puzzleGrid[x][y].getValue() == null)
 					q.add(this.puzzleGrid[x][y]);
 
-		if (!this.solve(q))
-			throw new InconsistentSudokuException();
+		try
+		{
+			if (!this.solve(q))
+				throw new InconsistentSudokuException();
+		} catch (MaxSearchDepthExceeded e)
+		{
+			this.initialize(this.backtracks, this.max_backtracks);
+			return this.solve();
+		}
 
 		solved = true;
 
 		return this.getSolved();
 	}
 
-	private boolean solve(Heap<Slot> q)
+	protected List<Integer> arrangePosVals(Set<Integer> cur)
+	{
+		List<Integer> posVals = new ArrayList<>(cur);
+		Collections.shuffle(posVals);
+		return posVals;
+	}
+
+	protected boolean solve(Heap<Slot> q) throws MaxSearchDepthExceeded
 	{
 		if (q.isEmpty())
 			return true;
 
 		Slot cur = q.remove();
 
-		List<Integer> posVals = new ArrayList<>(cur.getDomain());
-		Collections.shuffle(posVals);
+		List<Integer> posVals = this.arrangePosVals(cur.getDomain());
 
 		int boxX = cur.getXCoordinate() / this.base;
 		int boxY = cur.getYCoordinate() / this.base;
@@ -108,6 +151,7 @@ public class BTSConstraintMRV extends SudokuSolver
 		{
 			undo.clear();
 			cur.setValue(i);
+			this.valUsedCount[i - 1]++;
 
 			// Update the possible value domains for each slot.
 			for (Slot j : this.rows[cur.getXCoordinate()])
@@ -129,26 +173,6 @@ public class BTSConstraintMRV extends SudokuSolver
 					undo.add(j);
 				}
 
-			/*
-			Slot col = null;
-			Slot row = null;
-			Slot box = null;
-
-			for (int j = 0; j < this.size; j++)
-			{
-				row = rows[cur.getXCoordinate()].get(j);
-				col = cols[cur.getYCoordinate()].get(j);
-				box = boxs[boxX][boxY].get(j);
-
-				if (row.removeFromDomain(i))
-					undo.add(rows[i].get(j));
-				if (col.removeFromDomain(i))
-					undo.add(cols[i].get(j));
-				if (box.removeFromDomain(i))
-					undo.add(boxs[boxX][boxY].get(j));
-			}
-			*/
-
 			if (solve(q))
 				return true;
 
@@ -159,13 +183,19 @@ public class BTSConstraintMRV extends SudokuSolver
 				q.increaseUpdate(s);
 			}
 
+			this.valUsedCount[i - 1]--;
 			cur.setValue(null);
 		}
 
+		if (backtracks > this.max_backtracks)
+			throw new MaxSearchDepthExceeded();
+
 		q.add(cur);
+
 		this.backtracks++;
 		return false;
 	}
+
 	public String toString()
 	{
 		StringBuilder boardString = new StringBuilder();
@@ -191,6 +221,7 @@ public class BTSConstraintMRV extends SudokuSolver
 
 		return boardString.toString();
 	}
+
 	public Sudoku getSolved() throws InconsistentSudokuException
 	{
 		if (!this.isSolved())
@@ -206,6 +237,7 @@ public class BTSConstraintMRV extends SudokuSolver
 
 		return new Sudoku(solved);
 	}
+
 	public int getBacktracks()
 	{
 		return this.backtracks;

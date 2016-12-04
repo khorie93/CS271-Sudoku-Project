@@ -8,6 +8,7 @@ public abstract class SudokuSolver
 	protected int size;
 	protected int base;
 	protected int backtracks;
+	protected int max_backtracks;
 	protected Sudoku init;
 	protected Sudoku isSolved;
 	protected boolean solved;

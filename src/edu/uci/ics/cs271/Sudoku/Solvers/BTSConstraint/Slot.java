@@ -1,5 +1,6 @@
 package edu.uci.ics.cs271.Sudoku.Solvers.BTSConstraint;
 
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;

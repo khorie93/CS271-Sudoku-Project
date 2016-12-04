@@ -1,5 +1,6 @@
 package edu.uci.ics.cs271.Sudoku.Solvers.BTSConstraint;
 
+
 import java.util.Collections;
 import java.util.Deque;
 import java.util.HashSet;
@@ -8,7 +9,9 @@ import java.util.List;
 import java.util.Set;
 
 import edu.uci.ics.cs271.Sudoku.Sudoku;
+import edu.uci.ics.cs271.Sudoku.Solvers.MaxSearchDepthExceeded;
 import edu.uci.ics.cs271.Sudoku.Solvers.SudokuSolver;
+import edu.uci.ics.cs271.Sudoku.Solvers.BTSConstraint.Slot;
 
 public class BTSConstraint extends SudokuSolver
 {
@@ -18,15 +21,26 @@ public class BTSConstraint extends SudokuSolver
 	Set<Integer> cols[];
 	Set<Integer> boxs[];
 	
-	@SuppressWarnings("unchecked")
 	public BTSConstraint(Sudoku s)
 	{
 		super(s);
+		this.initialize(0,1);
+	}
 
+	public BTSConstraint(int board[][])
+	{
+		super(board);
+		this.initialize(0,1);
+	}
+
+	@SuppressWarnings("unchecked")
+	private void initialize(int backtracks, int max_backtracks)
+	{
 		int size = this.init.getSize();
-		this.backtracks = 0;
+		this.backtracks = backtracks;
+		this.max_backtracks = max_backtracks * this.base;
 
-		this.puzzleGrid = new Slot[size][size];
+		this.puzzleGrid = this.genPuzzleMatrix(); 
 
 		// this.rows = (HashSet<Integer>[]) new HashSet[this.size];
 		this.rows = new HashSet[size];
@@ -58,11 +72,20 @@ public class BTSConstraint extends SudokuSolver
 		for (int x = 0; x < size; x++)
 			for (int y = 0; y < size; y++)
 				this.puzzleGrid[x][y].calcPosVals();
-	}
 
-	public BTSConstraint(int board[][])
+		for (int x = 0; x < size; x++)
+		{
+			for (int y = 0; y < size; y++)
+			{
+				if(this.init.board[x][y] != 0)
+					this.puzzleGrid[x][y].setValue(this.init.board[x][y]);
+			}
+		}
+		
+	}
+	private Slot[][] genPuzzleMatrix()
 	{
-		super(board);
+		return new Slot[size][size];
 	}
 
 	public Sudoku solve() throws InconsistentSudokuException
@@ -77,14 +100,21 @@ public class BTSConstraint extends SudokuSolver
 				if (this.puzzleGrid[x][y].getValue() == null)
 					q.add(this.puzzleGrid[x][y]);
 
-		if (!this.solve(q))
-			throw new InconsistentSudokuException();
+		try
+		{
+			if (!this.solve(q))
+				throw new InconsistentSudokuException();
+		} catch (MaxSearchDepthExceeded e)
+		{
+			this.initialize(this.backtracks, this.max_backtracks);
+			return this.solve();
+		}
 		solved = true;
 		
 		return getSolved();
 	}
 
-	private boolean solve(Deque<Slot> q)
+	private boolean solve(Deque<Slot> q) throws MaxSearchDepthExceeded
 	{
 		if (q.isEmpty())
 			return true;
@@ -100,6 +130,9 @@ public class BTSConstraint extends SudokuSolver
 				return true;
 			cur.setValue(null);
 		}
+		
+		if(backtracks > this.max_backtracks)
+			throw new MaxSearchDepthExceeded();
 
 		q.push(cur);
 		this.backtracks++;
