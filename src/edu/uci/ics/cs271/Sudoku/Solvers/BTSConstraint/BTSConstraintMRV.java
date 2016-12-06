@@ -103,8 +103,6 @@ public class BTSConstraintMRV extends SudokuSolver
 		Heap<Slot> q = new MinArrayHeap<>(this.size * this.size, Slot.getComparator());
 		// Heap<Slot> q = new PriorityQHeap<>(Slot.getComparator());
 
-		// TreeMap<Slot, Slot> map = new TreeMap<>();
-
 		int size = this.init.getSize();
 
 		for (int x = 0; x < size; x++)
