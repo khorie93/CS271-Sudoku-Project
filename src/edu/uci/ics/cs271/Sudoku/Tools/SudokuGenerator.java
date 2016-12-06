@@ -1,4 +1,4 @@
-package edu.uci.cs271.Sudoku.Tools;
+package edu.uci.ics.cs271.Sudoku.Tools;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;

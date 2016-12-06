@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
-import edu.uci.cs271.Sudoku.Tools.SudokuGenerator;
 import edu.uci.ics.cs271.Sudoku.Solvers.SudokuSolver;
 import edu.uci.ics.cs271.Sudoku.Solvers.SudokuSolver.InconsistentSudokuException;
+import edu.uci.ics.cs271.Sudoku.Tools.SudokuGenerator;
 import edu.uci.ics.cs271.Sudoku.Solvers.BTSConstraint.BTSConstraint;
 import edu.uci.ics.cs271.Sudoku.Solvers.BTSConstraint.BTSConstraintMRV;
 import edu.uci.ics.cs271.Sudoku.Solvers.BTSConstraint.BTSConstraintMRVnMAV;
@@ -54,7 +54,7 @@ public class SudokuDriver
 	}
 	private static DriverState sizeMenu()
 	{
-		System.out.println("What size Sudoku would you to use?");
+		System.out.println("What size Sudoku would you like to use?");
 		System.out.print("> ");
 		
 		int size = keyboard.nextInt();

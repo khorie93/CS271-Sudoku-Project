@@ -6,13 +6,17 @@ By: Gilberto Perez and Kana Horie
 
 The SudokuSolver project for CS271 F2016 implements three different solvers, which are incrementally more powerful.
 
-Based on our results, BTSConstraintMRV appears to be most the stable. As such, that is the solver that is used by default.
+Based on our results, BTSConstraintMRV appears to be the most the stable. As such, that is the solver that is used by default.
 
-The ThreeSudoku.java class is the driver program that was used to run the benchmarks provided to us. Using it is very simple:
+The ThreeSudoku.jar is the driver program that was used to run the benchmarks provided to us. Using it is very simple:
 
-$ java ThreeSudoku /path/to/benchmark/file
+$ java -jar ThreeSudoku.jar /path/to/benchmark/file
 
-A second driver program is also provided called 'SudokuDriver.java'. This program does not take any command line arguments. Instead it prompts the user for what he would like to do. It starts by asking the user what problem he would like to solve(e.g 3Sudoku, 4Sudoku). 
+A second driver program is also provided called 'SudokuDriver.jar'.  
+
+$ java -jar SudokuDriver.jar
+
+This program does not take any command line arguments. Instead it prompts the user for what he would like to do. It starts by asking the user what problem he would like to solve(e.g 3Sudoku, 4Sudoku).
 
 Next, the user will be prompted with the following menu:
 

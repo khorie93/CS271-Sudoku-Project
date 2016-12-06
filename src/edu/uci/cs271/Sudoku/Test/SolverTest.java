@@ -6,10 +6,10 @@ import java.util.Random;
 
 import org.junit.Test;
 
-import edu.uci.cs271.Sudoku.Tools.SudokuGenerator;
 import edu.uci.ics.cs271.Sudoku.Sudoku;
 import edu.uci.ics.cs271.Sudoku.Solvers.SudokuSolver;
 import edu.uci.ics.cs271.Sudoku.Solvers.SudokuSolver.InconsistentSudokuException;
+import edu.uci.ics.cs271.Sudoku.Tools.SudokuGenerator;
 import edu.uci.ics.cs271.Sudoku.Solvers.BTSConstraint.BTSConstraint;
 import edu.uci.ics.cs271.Sudoku.Solvers.BTSConstraint.BTSConstraintMRV;
 import edu.uci.ics.cs271.Sudoku.Solvers.BTSConstraint.BTSConstraintMRVnMAV;

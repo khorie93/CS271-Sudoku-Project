@@ -4,11 +4,11 @@ import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.util.Random;
 
-import edu.uci.cs271.Sudoku.Tools.SudokuGenerator;
 import edu.uci.ics.cs271.Sudoku.Solvers.SudokuSolver;
 import edu.uci.ics.cs271.Sudoku.Solvers.BTSConstraint.BTSConstraint;
 import edu.uci.ics.cs271.Sudoku.Solvers.BTSConstraint.BTSConstraintMRVnMAV;
 import edu.uci.ics.cs271.Sudoku.Solvers.SudokuSolver.InconsistentSudokuException;
+import edu.uci.ics.cs271.Sudoku.Tools.SudokuGenerator;
 
 public class SudokuBTSConstraintMRVnMAVDriver
 {

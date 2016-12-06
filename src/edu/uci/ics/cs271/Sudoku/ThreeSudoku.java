@@ -48,50 +48,77 @@ public class ThreeSudoku
 			for (Sudoku puzz : myPuzzles)
 			{
 				List<SolverResult> srList = new ArrayList<>(n);
-				
+
 				long startTime;
 				long endTime;
 				Sudoku solved = null;
 
-				for (int i = 0; i < n; i++)
+				SudokuSolver ss = null;
+
+				for (int j = 0; j < 3; j++)
 				{
-					SudokuSolver ss = new BTSConstraintMRV(puzz);
-
-					try
+					for (int i = 0; i < n; i++)
 					{
-						startTime = System.nanoTime();
-						solved = ss.solve();
-						endTime = System.nanoTime();
+						switch (j) {
+						case 0:
+							ss = new BTSConstraint(puzz);
+							break;
+						case 1:
+							ss = new BTSConstraintMRV(puzz);
+							break;
+						case 2:
+							ss = new BTSConstraintMRVnMAV(puzz);
+							break;
+						}
 
-						double runTime = (endTime - startTime) / 1e6;
+						try
+						{
+							startTime = System.nanoTime();
+							solved = ss.solve();
+							endTime = System.nanoTime();
 
-						srList.add(new SolverResult(ss.getBacktracks(), runTime));
-					} catch (InconsistentSudokuException e)
+							double runTime = (endTime - startTime) / 1e6;
+
+							srList.add(new SolverResult(ss.getBacktracks(), runTime));
+						} catch (InconsistentSudokuException e)
+						{
+							System.out.println("Sudoku puzzle is incosistent. No solution exists!");
+							System.out.println("Will not attempt to solve again...");
+							break;
+						}
+					}
+
+					double avgBacktracks = 0.0;
+					double avgRuntime = 0.0;
+
+					for (SolverResult i : srList)
 					{
-						System.out.println("Sudoku puzzle is incosistent. No solution exists!");
-						System.out.println("Will not attempt to solve again...");
+						avgBacktracks += i.backtracks;
+						avgRuntime += i.runTimeInMilli;
+					}
+
+					avgBacktracks /= srList.size();
+					avgRuntime /= srList.size();
+
+					System.out.println("Initial Puzzle:");
+					System.out.println(puzz);
+					System.out.println("Solved Puzzle:");
+					System.out.println(solved);
+					switch (j) {
+					case 0:
+						System.out.println("\nRunning using BTSConstraint:\n");
+						break;
+					case 1:
+						System.out.println("\nRunning using BTSConstraintMRV:\n");
+						break;
+					case 2:
+						System.out.println("\nRunning using BTSConstraintMRVnMAV:\n");
 						break;
 					}
+					System.out.println("Average Backtracks: " + avgBacktracks);
+					System.out.println("Average Runtime   : " + avgRuntime);
+					srList.clear();
 				}
-
-				double avgBacktracks = 0.0;
-				double avgRuntime = 0.0;
-
-				for(SolverResult i : srList)
-				{
-					avgBacktracks += i.backtracks;
-					avgRuntime += i.runTimeInMilli;
-				}
-				
-				avgBacktracks /= srList.size();
-				avgRuntime /= srList.size();
-				
-				System.out.println("Initial Puzzle:");
-				System.out.println(puzz);
-				System.out.println("Solved Puzzle:");
-				System.out.println(solved);
-				System.out.println("Average Backtracks: " + avgBacktracks);
-				System.out.println("Average Runtime   : " + avgRuntime);
 
 			}
 			outputSolution(System.out);
