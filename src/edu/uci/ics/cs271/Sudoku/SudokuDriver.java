@@ -16,10 +16,12 @@ import edu.uci.ics.cs271.Sudoku.Solvers.BTSConstraint.BTSConstraintMRVnMAV;
 public class SudokuDriver
 {
 	private static Scanner keyboard;
-	private static DriverState state = DriverState.MAIN_MENU;
+	private static DriverState state = DriverState.SIZE_SELECTION;
 	private static Sudoku puzz;
 	private static Sudoku solvedPuzz;
 	private static SudokuSolver ss;
+	
+	private static int base = 3;
 	
 	public static void main(String[] args)
 	{
@@ -30,6 +32,9 @@ public class SudokuDriver
 		while (state != DriverState.EXIT)
 		{
 			switch (state) {
+			case SIZE_SELECTION:
+				state = sizeMenu();
+				break;
 			case MAIN_MENU:
 				state = mainMenu();
 				break;
@@ -46,6 +51,21 @@ public class SudokuDriver
 		
 		System.out.println("\nGoodbye!");
 		keyboard.close();
+	}
+	private static DriverState sizeMenu()
+	{
+		System.out.println("What size Sudoku would you to use?");
+		System.out.print("> ");
+		
+		int size = keyboard.nextInt();
+		
+		if(size < 2)
+		{
+			System.out.println("Size should be greater than 1!");
+			return state;
+		}
+		base = size;
+		return DriverState.MAIN_MENU;
 	}
 
 	private static DriverState solverChoiceMenu()
@@ -166,20 +186,21 @@ public class SudokuDriver
 		System.out.println("Average Runtime   : " + totalTime/runList.size() + "ms");
 		System.out.println("Average Backtracks: " + (double)totalBacktracks/runList.size());
 			
-		return DriverState.MAIN_MENU;
+		return DriverState.SOLVER_CHOICE_MENU;
 	}
 
 	public static Sudoku readSudokuPuzzle(Scanner sc)
 	{
-		int[][] puzzleBoard = new int[9][9];
+		int size = base * base;
+		int[][] puzzleBoard = new int[size][size];
 
-		for (int i = 0; i < 9; i++)
-			for (int j = 0; j < 9; j++)
+		for (int i = 0; i < size; i++)
+			for (int j = 0; j < size; j++)
 			{
 				int val = sc.nextInt();
-				if (val > 9 || val < 0)
+				if (val > size || val < 0)
 					throw new InputMismatchException(
-							"Read a value outside of allowed range: [0-9]\nValue read: " + val);
+							"Read a value outside of allowed range: [0" + "-" + size + "]\nValue read: " + val);
 				puzzleBoard[i][j] = sc.nextInt();
 			}
 
@@ -190,11 +211,11 @@ public class SudokuDriver
 	{
 		Random gen = new Random(System.currentTimeMillis());
 
-		return SudokuGenerator.genSudokuPuzzle(3, gen.nextDouble() / 4.0 + 0.25);
+		return SudokuGenerator.genSudokuPuzzle(base, gen.nextDouble() / 4.0 + 0.25);
 	}
 
 	private enum DriverState
 	{
-		MAIN_MENU, SOLVER_CHOICE_MENU, SOLVER_MENU, EXIT
+		SIZE_SELECTION,MAIN_MENU, SOLVER_CHOICE_MENU, SOLVER_MENU, EXIT
 	}
 }

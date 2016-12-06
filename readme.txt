@@ -12,7 +12,9 @@ The ThreeSudoku.java class is the driver program that was used to run the benchm
 
 $ java ThreeSudoku /path/to/benchmark/file
 
-A second driver program is also provided called 'SudokuDriver.java'. This program does not take any command line arguments. Instead it asks the user what he would like to do:
+A second driver program is also provided called 'SudokuDriver.java'. This program does not take any command line arguments. Instead it prompts the user for what he would like to do. It starts by asking the user what problem he would like to solve(e.g 3Sudoku, 4Sudoku). 
+
+Next, the user will be prompted with the following menu:
 
 1) Generate a random Sudoku puzzle
 2) Enter a Sudoku puzzle

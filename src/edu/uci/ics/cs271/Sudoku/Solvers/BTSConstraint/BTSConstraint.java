@@ -66,7 +66,7 @@ public class BTSConstraint extends SudokuSolver
 			for (int y = 0; y < size; y++)
 			{
 				int boxNum = x / this.init.getBase() + this.init.getBase() * (y / this.init.getBase());
-				puzzleGrid[x][y] = new Slot(x, y, rows[x], cols[y], boxs[boxNum]);
+				puzzleGrid[x][y] = new Slot(x, y, this.size, rows[x], cols[y], boxs[boxNum]);
 			}
 		}
 		for (int x = 0; x < size; x++)

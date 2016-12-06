@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class Slot implements Comparable<Slot>
+public class Slot extends edu.uci.ics.cs271.Sudoku.Solvers.Slot<Integer> implements Comparable<Slot>
 {
 	private Coordinate cor;
 	private Integer value;
@@ -13,15 +13,17 @@ public class Slot implements Comparable<Slot>
 	private Set<Integer> col;
 	private Set<Integer> row;
 	private Set<Integer> box;
+	
+	private int size;
 
-	public Slot(int x, int y, Set<Integer> row, Set<Integer> col, Set<Integer> box)
+	public Slot(int x, int y, int size, Set<Integer> row, Set<Integer> col, Set<Integer> box)
 	{
+		super(null, size);
+
 		this.cor = new Coordinate(x,y);
 		this.row = row;
 		this.col = col;
 		this.box = box;
-
-		this.value = null;
 	}
 
 	public List<Integer> calcPosVals()
@@ -75,10 +77,15 @@ public class Slot implements Comparable<Slot>
 
 	public String toString()
 	{
-		if (this.value == null)
-			return " x";
+		StringBuilder s = new StringBuilder();
+		
+		for(int i = 0; i < Math.log10(this.size); i++)
+			s.append(' ');
 
-		return " " + this.value;
+		if (this.value == null)
+			return s.append(" 0").toString();
+
+		return s.append(" " + this.value).toString();
 	}
 
 	public Integer getValue()

@@ -4,12 +4,11 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Slot implements Comparable<Slot>
+public class Slot extends edu.uci.ics.cs271.Sudoku.Solvers.Slot<Integer> implements Comparable<Slot>
 {
 	private static final SlotDomainComparator comp;
 	private Coordinate cor;
-	private Integer value;
-	private Integer size;
+	private int size;
 
 	static
 	{
@@ -20,11 +19,12 @@ public class Slot implements Comparable<Slot>
 
 	public Slot(int x, int y, int size)
 	{
+		super(null, size);
+
 		this.size = size;
 		this.cor = new Coordinate(x, y);
 		this.domain = new HashSet<>(this.size);
 
-		this.value = null;
 
 		for (int i = 1; i <= this.size; i++)
 			this.domain.add(i);
@@ -50,24 +50,6 @@ public class Slot implements Comparable<Slot>
 	public int compareTo(Slot that)
 	{
 		return this.cor.x * this.cor.x + this.cor.y * this.cor.y;
-	}
-
-	public String toString()
-	{
-		if (this.value == null)
-			return " x";
-
-		return " " + this.value;
-	}
-
-	public Integer getValue()
-	{
-		return value;
-	}
-
-	public void setValue(Integer value)
-	{
-		this.value = value;
 	}
 
 	public Set<Integer> getDomain()
