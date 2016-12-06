@@ -13,27 +13,35 @@ import edu.uci.ics.cs271.Sudoku.Solvers.SudokuSolver.InconsistentSudokuException
 
 public class SudokuGenerator
 {
-	public static Sudoku genSudokuPuzzle(int base, double d) throws InconsistentSudokuException
+	public static Sudoku genSudokuPuzzle(int base, double d)
 	{
 		int size = base * base;
 		Sudoku blank = new Sudoku(base);
 		SudokuSolver s = new BTSConstraintMRV(blank);
-		
-		Sudoku solved = s.solve();
-		
+
+		Sudoku solved = null;
+		try
+		{
+			solved = s.solve();
+		} catch (InconsistentSudokuException e)
+		{
+			// Should never happen since it is an empty board.
+			e.printStackTrace();
+		}
+
 		List<Coordinate> l = new ArrayList<>();
-		
-		for(int i = 0; i < size; i++)
-			for(int j = 0; j < size; j++)
-				l.add(new Coordinate(i,j));
+
+		for (int i = 0; i < size; i++)
+			for (int j = 0; j < size; j++)
+				l.add(new Coordinate(i, j));
 
 		Collections.shuffle(l);
-		
+
 		Queue<Coordinate> q = new ArrayDeque<>(l);
-		
+
 		int numberOfVars = size * size;
-		
-		for(int i = 0; i < numberOfVars - d * numberOfVars; i++)
+
+		for (int i = 0; i < numberOfVars - d * numberOfVars; i++)
 		{
 			Coordinate cur = q.remove();
 			solved.board[cur.x][cur.y] = 0;
@@ -41,6 +49,7 @@ public class SudokuGenerator
 
 		return solved;
 	}
+
 	private static class Coordinate
 	{
 		int x;

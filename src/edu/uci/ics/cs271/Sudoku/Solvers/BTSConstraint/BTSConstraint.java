@@ -34,7 +34,7 @@ public class BTSConstraint extends SudokuSolver
 	}
 
 	@SuppressWarnings("unchecked")
-	private void initialize(int backtracks, int max_backtracks)
+	protected void initialize(int backtracks, int max_backtracks)
 	{
 		int size = this.init.getSize();
 		this.backtracks = backtracks;
@@ -153,5 +153,11 @@ public class BTSConstraint extends SudokuSolver
 				solved[i][j] = this.puzzleGrid[i][j].getValue();
 
 		return new Sudoku(solved);
+	}
+
+	@Override
+	public void reset()
+	{
+		this.initialize(0,1);
 	}
 }

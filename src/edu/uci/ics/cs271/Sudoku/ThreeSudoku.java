@@ -6,8 +6,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -57,7 +55,7 @@ public class ThreeSudoku
 
 				for (int i = 0; i < n; i++)
 				{
-					SudokuSolver ss = new BTSConstraint(puzz);
+					SudokuSolver ss = new BTSConstraintMRV(puzz);
 
 					try
 					{
@@ -165,19 +163,4 @@ public class ThreeSudoku
 		}
 	}
 
-	private static class SolverResult
-	{
-		int backtracks;
-		double runTimeInMilli;
-
-		public SolverResult(int b, double r)
-		{
-			this.backtracks = b;
-			this.runTimeInMilli = r;
-		}
-		public String toString()
-		{
-			return "Time: " + this.runTimeInMilli + "ms" + "\nBacktracks: " + this.backtracks;
-		}
-	}
 }

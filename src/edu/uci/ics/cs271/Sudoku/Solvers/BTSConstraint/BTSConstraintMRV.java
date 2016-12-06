@@ -43,7 +43,6 @@ public class BTSConstraintMRV extends SudokuSolver
 
 		this.puzzleGrid = new Slot[size][size];
 
-		// this.rows = (HashSet<Integer>[]) new HashSet[this.size];
 		this.rows = new ArrayList[this.size];
 		this.cols = new ArrayList[this.size];
 		this.boxs = new ArrayList[this.base][this.base];
@@ -239,5 +238,11 @@ public class BTSConstraintMRV extends SudokuSolver
 	public int getBacktracks()
 	{
 		return this.backtracks;
+	}
+
+	@Override
+	public void reset()
+	{
+		this.initialize(0, this.base);
 	}
 }

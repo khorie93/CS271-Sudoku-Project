@@ -43,6 +43,7 @@ public abstract class SudokuSolver
 
 	public class InconsistentSudokuException extends Exception
 	{
+		private static final long serialVersionUID = 569574072112641717L;
 	}
 
 	public int getBacktracks()
@@ -52,4 +53,6 @@ public abstract class SudokuSolver
 
 		return this.backtracks;
 	}
+	protected abstract void initialize(int backtracks, int max_backtracks);
+	public abstract void reset();
 }
